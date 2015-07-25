@@ -64,6 +64,11 @@ function LOOKUPNIFS(nth_match, search_range, criteria_range1, criteria1) {
     }
   }
   if (nth_match == 0) {
+    // a completely empty array makes google sheets angry
+    if (!all_matches.length) {
+      all_matches.push("");
+    }
+
     return all_matches;
   }
   return "";
