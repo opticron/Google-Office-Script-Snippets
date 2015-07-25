@@ -71,6 +71,18 @@ function LOOKUPNIFS(nth_match, search_range, criteria_range1, criteria1) {
 
 function evaluateCriteria_(test_data, comparator) {
   var operators = ["<=", ">=", "=", "<>", "<", ">"];
+  var convert_to_date = false;
+
+  // unwrap single-element arrays
+  if (test_data.map && test_data.length == 1) {
+    test_data = test_data[0];
+  }
+
+  // set date conversion
+  if (test_data instanceof Date) {
+    convert_to_date = true;
+  }
+
   // separate comparator and operand
   for(var op_index = 0; op_index < operators.length; op_index++) {
     var operator = operators[op_index];
@@ -78,6 +90,16 @@ function evaluateCriteria_(test_data, comparator) {
       continue;
     }
     var operand = comparator.slice(operator.length);
+
+    // convert to a date if necessary
+    if (convert_to_date) {
+      operand = new Date(operand);
+    }
+
+    // get valueOfs for complex data types
+    test_data = test_data.valueOf();
+    operand = operand.valueOf();
+
     // we have a valid operator!
     switch(operator) {
     case "<=":
